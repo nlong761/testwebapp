@@ -9,6 +9,14 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(multer({ dest: '/tmp/' }));
 var storage = multer.memoryStorage();
+// storage = multer.diskStorage({
+//     destination: function(req, file, cb) {
+//         cb(null, 'uploads/');
+//     },
+//     filename: function(req, file, cb) {
+//         cb(null, file.fieldname + '-' + Date.now());
+//     }
+// });
 var upload = multer({
     dest: 'uploads/',
     storage: storage,
@@ -17,41 +25,10 @@ var upload = multer({
     },
 });
 var file_upload = upload.single('file_upload');
-app.post('/upload', file_upload, function (req, res, next) {
-    // req.file is the `avatar` file
-    // req.body will hold the text fields, if there were any 
-    res.write("filename:\t\t" + req.file.filename + "\n");
-    res.write("path:\t\t" + req.file.path + "\n");
-    res.write("mimetype:\t\t" + req.file.mimetype + "\n");
-    res.write("originName:\t\t" + req.file.originalname + "\n");
-    res.write("Time:\t\t" + (new Date()) + "\n");
-    res.write("Size:\t\t" + req.file.size + "\n");
-    res.send();
-});
-app.post('/_upload', function(req, res){
-    file_upload(req, res, function(req, err){
-        if (err) {
-            return res.send({message:"error"});
-        }
-        res.write("filename:\t\t" + req.file.filename + "\n");
-        res.write("path:\t\t" + req.file.path + "\n");
-        res.write("mimetype:\t\t" + req.file.mimetype + "\n");
-        res.write("originName:\t\t" + req.file.originalname + "\n");
-        res.write("Time:\t\t" + (new Date()) + "\n");
-        res.write("Size:\t\t" + req.file.size + "\n");
-        res.send();
-    });
-});
-app.post('/uploads', upload.array('file_upload'), function (req, res, next) {
-    // req.file is the `avatar` file
-    // req.body will hold the text fields, if there were any 
-    res.write("filename:\t\t" + req.file.filename + "\n");
-    res.write("path:\t\t" + req.file.path + "\n");
-    res.write("mimetype:\t\t" + req.file.mimetype + "\n");
-    res.write("originName:\t\t" + req.file.originalname + "\n");
-    res.write("Time:\t\t" + (new Date()) + "\n");
-    res.write("Size:\t\t" + req.file.size + "\n");
-    res.send();
+app.post('/files/upload', file_upload, function (req, res, next) {
+    res.send({textfields: req.body, file:req.file});
+}, function(err, req, res, next) {
+    res.send({err: err});
 });
 
 // app.get('/index.htm', function (req, res) {
