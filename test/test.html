@@ -24,16 +24,17 @@
         <input type="submit" value="Submit" />
     </form> -->
     <h1>Upload test</h1>
-    <form action="http://localhost:3000/_upload" method="POST" enctype="multipart/form-data">
+    <form action="http://localhost:3000/files/upload" method="POST" enctype="multipart/form-data">
+        <!-- <span>Name:</span><input type="text" name="username" id="username"></br>
+        <span>Age</span><input type="text" name="age" id="age"></br> -->
         <input type="file" name="file_upload" size="50" /><br />
         <!-- <input type="file" name="avatar" size="50" /><br /> -->
         <input type="submit" value="Upload File" />
     </form>
-
-    <h1>Upload test</h1>
-    <form action="http://localhost:3000/uploads" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file_upload" size="50" /><br />
-        <input type="file" name="file_upload" size="50" /><br />
+    <h1>Upload image test</h1>
+    <form action="http://localhost:3000/files/image" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image_upload" size="50" /><br />
+        <!-- <input type="file" name="avatar" size="50" /><br /> -->
         <input type="submit" value="Upload File" />
     </form>
 

@@ -1,48 +1,46 @@
-var http = require('http'),
-    inspect = require('util').inspect;
+// "use strict";
 
-var Busboy = require('busboy');
+var bind = function() {
+    if (!('bind' in Function.prototype)) {
+        var fn = this;
+        var context = arguments[0];
+        var args = Array.prototype.slice.call(arguments, 1);
+        return function() {
+            return fn.apply(context, args.concat([].slide.call(arguments)));
+        };
+    }
+};
 
-http.createServer(function(req, res) {
-  if (req.method === 'POST') {
-    var busboy = new Busboy({ headers: req.headers });
-    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-      console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
-      file.on('data', function(data) {
-        console.log('File [' + fieldname + '] got ' + data.length + ' bytes');
-      });
-      file.on('end', function() {
-        console.log('File [' + fieldname + '] Finished');
-      });
-    });
-    busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
-      console.log('Field [' + fieldname + ']: value: ' + inspect(val));
-    });
-    busboy.on('finish', function() {
-      console.log('Done parsing form!');
-      res.writeHead(303, { Connection: 'close', Location: '/' });
-      res.end();
-    });
-    req.pipe(busboy);
-  } else if (req.method === 'GET') {
-    res.writeHead(200, { Connection: 'close' });
-    res.end('<html><head></head><body>\
-               <form method="POST" enctype="multipart/form-data">\
-                <input type="text" name="textfield"><br />\
-                <input type="file" name="filefield"><br />\
-                <input type="submit">\
-              </form>\
-            </body></html>');
-  }
-}).listen(8000, function() {
-  console.log('Listening for requests');
-});
+var Module = (function(){
+    var privateProperty = '';
+    function privateM(args) {
 
-// Example output, using http://nodejs.org/images/ryan-speaker.jpg as the file:
-//
-// Listening for requests
-// File [filefield]: filename: ryan-speaker.jpg, encoding: binary
-// File [filefield] got 11971 bytes
-// Field [textfield]: value: 'testing! :-)'
-// File [filefield] Finished
-// Done parsing form!
+    }
+    return {
+        publicProperty: '',
+        publicMethod: function(args) {},
+        privilegeMethod: function(args) {
+            return privateM(args);
+        }
+    };
+})();
+
+(function(window){
+    var foo, bar;
+    function privateF() {
+
+    }
+    window.Module = {
+        public: function() {
+            console.log("Public");
+        }
+    };
+})(this);
+// this.Module.public();
+
+
+var f = {
+    foo: () => this,
+    // foo: function() {return this;}
+};
+console.log(f === f.foo());
