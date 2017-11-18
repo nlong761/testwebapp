@@ -26,3 +26,4 @@ counter.on('count', function(count) {
 });
 
 counter.start(); 
+
